@@ -3,6 +3,13 @@ resource "azurerm_resource_group" "rg" {
   location = var.location
 }
 
+# module "network" {
+#   source           = "../network"
+#   cluster_name     = var.aks_cluster_name
+#   cluster_location = azurerm_resource_group.rg.location
+#   cluster_rg       = azurerm_resource_group.rg.name
+# }
+
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.aks_cluster_name
   location            = azurerm_resource_group.rg.location
@@ -15,12 +22,20 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_count      = 1
     vm_size         = "Standard_B2s"
     os_disk_size_gb = 30
+
+    #vnet_subnet_id = module.network.subnet_id
+
     upgrade_settings {
       drain_timeout_in_minutes      = 0
       max_surge                     = "10%"
       node_soak_duration_in_minutes = 0
     }
   }
+
+  # network_profile {
+  #   network_plugin = "azure"
+  #   outbound_type  = "userAssignedNATGateway"
+  # }
 
   azure_active_directory_role_based_access_control {
     azure_rbac_enabled = true
