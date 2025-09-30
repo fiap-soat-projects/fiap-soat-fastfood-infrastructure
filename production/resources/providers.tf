@@ -10,7 +10,7 @@ terraform {
     resource_group_name  = "rg-terraform-prod"
     storage_account_name = "safiapsoatterraformprod"
     container_name       = "tfstate"
-    key                  = "resources/terraform.tfstate"
+    key                  = "infrastructure/resources/terraform.tfstate"
   }
 }
 
