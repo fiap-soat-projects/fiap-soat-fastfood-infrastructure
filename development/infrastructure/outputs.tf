@@ -8,6 +8,10 @@ output "ca_certificate" {
   sensitive = true
 }
 
+output "aks_ip" {
+  value = module.network.outbound_ip
+}
+
 output "tenantid_id" {
   value = var.tenantid_id
 }
