@@ -29,7 +29,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   azure_active_directory_role_based_access_control {
     azure_rbac_enabled = true
-    tenant_id          = var.tenantid_id
+    tenant_id          = var.tenant_id
   }
 
   identity {
