@@ -23,7 +23,7 @@ provider "kubernetes" {
     command     = "kubelogin"
     args = [
       "get-token",
-      "--tenant-id", data.terraform_remote_state.infrastructure.outputs.tenantid_id,
+      "--tenant-id", data.terraform_remote_state.infrastructure.outputs.tenant_id,
       "--server-id", data.terraform_remote_state.infrastructure.outputs.aks_aad_server_id,
       "--login", "azurecli"
     ]

@@ -3,7 +3,7 @@ variable "subscription_id" {
   type        = string
 }
 
-variable "tenantid_id" {
+variable "tenant_id" {
   description = "Azure Active Directory Tenant ID"
   type        = string
 }
@@ -38,5 +38,9 @@ variable "aks_dns_service_ip" {
   description = "IP address within the Kubernetes service CIDR range for the DNS service"
   type        = string
   default     = "192.168.0.10"
+}
 
+variable "aks_rg_network_id" {
+  description = "The ID of the Resource Group where the network resources are deployed"
+  type        = string
 }

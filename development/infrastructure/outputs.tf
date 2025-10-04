@@ -12,8 +12,8 @@ output "aks_ip" {
   value = module.network.outbound_ip
 }
 
-output "tenantid_id" {
-  value = var.tenantid_id
+output "tenant_id" {
+  value = var.tenant_id
 }
 
 output "aks_aad_server_id" {

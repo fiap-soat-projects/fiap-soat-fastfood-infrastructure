@@ -3,7 +3,7 @@ variable "subscription_id" {
   type        = string
 }
 
-variable "tenantid_id" {
+variable "tenant_id" {
   description = "The Azure AD tenant ID for the AKS cluster"
   type        = string
 }

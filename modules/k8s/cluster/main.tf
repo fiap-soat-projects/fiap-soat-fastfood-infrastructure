@@ -29,12 +29,18 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   azure_active_directory_role_based_access_control {
     azure_rbac_enabled = true
-    tenant_id          = var.tenantid_id
+    tenant_id          = var.tenant_id
   }
 
   identity {
     type = "SystemAssigned"
   }
+}
+
+resource "azurerm_role_assignment" "aks_network_contributor" {
+  scope                = var.aks_rg_network_id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
 }
 
 resource "azurerm_role_assignment" "aks_cluster_admin" {
