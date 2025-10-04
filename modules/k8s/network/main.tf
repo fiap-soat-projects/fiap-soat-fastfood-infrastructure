@@ -12,6 +12,14 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = ["10.0.1.0/24"]
 }
 
+resource "azurerm_public_ip" "aks_inbound_ip" {
+  name                = "${var.aks_cluster_name}-service-ip"
+  location            = var.aks_location
+  resource_group_name = var.aks_resource_group_name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+
 resource "azurerm_public_ip" "aks_outbound_ip" {
   name                = "${var.aks_cluster_name}-nat-ip"
   location            = var.aks_location

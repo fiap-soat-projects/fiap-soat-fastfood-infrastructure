@@ -20,6 +20,7 @@ module "cluster" {
   aks_cluster_name        = local.aks_cluster_name
   location                = var.region
   vnet_subnet_id          = module.network.subnet_id
+  aks_rg_network_id       = azurerm_resource_group.rg.id
 
   depends_on = [module.network]
 }
