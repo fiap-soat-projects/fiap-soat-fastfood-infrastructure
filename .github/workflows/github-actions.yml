@@ -7,46 +7,46 @@ on:
             - main
 
 jobs:
-    # terraform_function:
-    #     runs-on: ubuntu-latest
-    #     environment: prd
-    #     defaults:
-    #         run:
-    #             working-directory: ./production/function
-    #     steps:
-    #         - name: Checkout
-    #           uses: actions/checkout@v4
+    terraform_function:
+        runs-on: ubuntu-latest
+        environment: prd
+        defaults:
+            run:
+                working-directory: ./production/function
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-    #         - name: Setup Terraform
-    #           uses: hashicorp/setup-terraform@v3
-    #           with:
-    #               terraform_version: 1.7.5
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3
+              with:
+                  terraform_version: 1.7.5
 
-    #         - name: Set Azure SP Environment Variables
-    #           run: |
-    #               echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
-    #               echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}" >> $GITHUB_ENV
-    #               echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
-    #               echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
+            - name: Set Azure SP Environment Variables
+              run: |
+                  echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
+                  echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}" >> $GITHUB_ENV
+                  echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
+                  echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
 
-    #         - name: Create tfvars file
-    #           run: |
-    #               cat > terraform.tfvars <<'EOF'
-    #               ${{ secrets.TFVARS_FUNCTION_CONTENT }}
-    #               EOF
+            - name: Create tfvars file
+              run: |
+                  cat > terraform.tfvars <<'EOF'
+                  ${{ secrets.TFVARS_FUNCTION_CONTENT }}
+                  EOF
 
-    #         - name: Terraform Init
-    #           run: terraform init
+            - name: Terraform Init
+              run: terraform init
 
-    #         - name: Terraform Plan
-    #           run: terraform plan
+            - name: Terraform Plan
+              run: terraform plan
 
-    #         - name: Terraform Apply
-    #           if: github.ref == 'refs/heads/main'
-    #           run: terraform apply
+            - name: Terraform Apply
+              if: github.ref == 'refs/heads/main'
+              run: terraform apply
 
     terraform_infrastructure:
-        # needs: terraform_function
+        needs: terraform_function
         runs-on: ubuntu-latest
         environment: prd
         defaults:
