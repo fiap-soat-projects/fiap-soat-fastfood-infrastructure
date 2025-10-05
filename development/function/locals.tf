@@ -7,5 +7,6 @@ locals {
 }
 
 locals {
-  kv_name = "kv-fastfood-auth-dev"
+  kv_name     = "kv-fastfood-auth-dev"
+  kv_rsa_name = "jwt-signing-key"
 }
