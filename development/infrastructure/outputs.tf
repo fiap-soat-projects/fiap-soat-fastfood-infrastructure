@@ -8,6 +8,10 @@ output "ca_certificate" {
   sensitive = true
 }
 
+output "aks_inbound_ip" {
+  value = module.network.inbound_ip
+}
+
 output "aks_ip" {
   value = module.network.outbound_ip
 }

@@ -35,5 +35,7 @@ resource "azurerm_function_app_flex_consumption" "azfunc" {
   maximum_instance_count      = 40
   instance_memory_in_mb       = 512
 
+  identity { type = "SystemAssigned" }
+
   site_config {}
 }
