@@ -39,6 +39,32 @@ resource "azurerm_api_management_api_operation" "azfunc_auth_operations" {
   url_template        = each.value.template
 }
 
+resource "azurerm_api_management_api_policy" "azfunc_wide_policy" {
+  api_name            = azurerm_api_management_api.auth_azfunc.name
+  api_management_name = azurerm_api_management.apim.name
+  resource_group_name = azurerm_resource_group.apim_rg.name
+
+  xml_content = <<XML
+    <policies>
+      <inbound>
+        <base />        
+        <set-header name="x-functions-key" exists-action="override">
+            <value>{{key-${data.terraform_remote_state.function.outputs.name}}}</value>
+        </set-header>
+      </inbound> 
+      <backend>
+          <base />
+      </backend>
+      <outbound>
+          <base />
+      </outbound>
+      <on-error>
+          <base />
+      </on-error>
+    </policies>
+  XML
+}
+
 resource "azurerm_api_management_named_value" "azfunc_key_nv" {
   name                = "key-${data.terraform_remote_state.function.outputs.name}"
   api_management_name = azurerm_api_management.apim.name
@@ -72,4 +98,33 @@ resource "azurerm_api_management_api_operation" "fastfood_api_operations" {
   display_name        = each.value.display_name
   method              = each.value.method
   url_template        = "/*"
+}
+
+resource "azurerm_api_management_api_policy" "fastfood_backend_wide_policy" {
+  api_name            = azurerm_api_management_api.fastfood_backend.name
+  api_management_name = azurerm_api_management.apim.name
+  resource_group_name = azurerm_resource_group.apim_rg.name
+
+  xml_content = <<XML
+    <policies>
+      <inbound>
+        <base />
+        <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Invalid or expired token.">          
+          <openid-config url="${data.terraform_remote_state.function.outputs.url}/api/.well-known/openid-configuration" />          
+          <audiences>
+            <audience>api://fastfood-api</audience>
+          </audiences>          
+          </validate-jwt>        
+      </inbound> 
+      <backend>
+          <base />
+      </backend>
+      <outbound>
+          <base />
+      </outbound>
+      <on-error>
+          <base />
+      </on-error>
+    </policies>
+  XML
 }
