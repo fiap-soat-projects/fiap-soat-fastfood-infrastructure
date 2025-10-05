@@ -14,9 +14,33 @@ resource "azurerm_api_management" "apim" {
   sku_name = "Developer_1"
 }
 
+resource "azurerm_api_management_api" "auth_azfunc" {
+  name                = local.apim_auth_function_name
+  display_name        = local.apim_auth_function_name
+  resource_group_name = azurerm_resource_group.apim_rg.name
+  api_management_name = azurerm_api_management.apim.name
+  revision            = "1"
+  path                = "auth"
+  protocols           = ["https"]
+  api_type            = "http"
+  service_url         = data.terraform_remote_state.function.outputs.url
+}
+
+resource "azurerm_api_management_api_operation" "azfunc_auth_operations" {
+  for_each = local.auth_function_operations
+
+  operation_id        = each.key
+  api_name            = azurerm_api_management_api.auth_azfunc.name
+  api_management_name = azurerm_api_management.apim.name
+  resource_group_name = azurerm_resource_group.apim_rg.name
+  display_name        = each.value.display_name
+  method              = each.value.method
+  url_template        = each.value.tempalte
+}
+
 resource "azurerm_api_management_api" "fastfood_backend" {
-  name                  = local.apim_backend_name
-  display_name          = local.apim_backend_name
+  name                  = local.apim_fastfood_backend_name
+  display_name          = local.apim_fastfood_backend_name
   resource_group_name   = azurerm_resource_group.apim_rg.name
   api_management_name   = azurerm_api_management.apim.name
   service_url           = "http://${local.fastfood_service_ip}:80"
@@ -27,7 +51,7 @@ resource "azurerm_api_management_api" "fastfood_backend" {
   subscription_required = false
 }
 
-resource "azurerm_api_management_api_operation" "wildcard" {
+resource "azurerm_api_management_api_operation" "fastfood_api_operations" {
   for_each = local.fastfood_api_operations
 
   operation_id        = "wildcard-${each.key}"

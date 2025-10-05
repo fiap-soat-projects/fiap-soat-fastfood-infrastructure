@@ -4,14 +4,18 @@ locals {
 }
 
 locals {
-  apim_backend_name = "fastfood-api-backend"
+  apim_auth_function_name = "fastfood-auth-function"
+
+  auth_function_operations = {
+    jwks         = { method = "GET", display_name = "jwks", tempalte = "/.well-known/jwks.json" }
+    openidconfig = { method = "GET", display_name = "open-id-config", tempalte = "/.well-known/openid-configuration" }
+    login        = { method = "POST", display_name = "login", tempalte = "/login" }
+  }
 }
 
 locals {
-  fastfood_service_ip = data.kubernetes_service.fastfood_service.status[0].load_balancer[0].ingress[0].ip
-}
+  apim_fastfood_backend_name = "fastfood-api-backend"
 
-locals {
   fastfood_api_operations = {
     get    = { method = "GET", display_name = "wildcard-proxy-get" }
     post   = { method = "POST", display_name = "wildcard-proxy-post" }
@@ -19,4 +23,8 @@ locals {
     put    = { method = "PUT", display_name = "wildcard-proxy-put" }
     delete = { method = "DELETE", display_name = "wildcard-proxy-delete" }
   }
+}
+
+locals {
+  fastfood_service_ip = data.kubernetes_service.fastfood_service.status[0].load_balancer[0].ingress[0].ip
 }
