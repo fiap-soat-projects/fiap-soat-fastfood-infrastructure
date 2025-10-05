@@ -1,6 +1,6 @@
 locals {
-  apim_rg_name = "rg-apim-dev"
-  apim_name    = "apim-fiap-soat-fastfood-dev"
+  apim_rg_name = "rg-apim-prod"
+  apim_name    = "apim-fiap-soat-fastfood-prod"
 }
 
 locals {

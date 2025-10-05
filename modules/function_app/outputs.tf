@@ -10,7 +10,10 @@ output "azfunc_name" {
   value = azurerm_function_app_flex_consumption.azfunc.name
 }
 
+output "azfunc_rg" {
+  value = var.azfunc_rg_name
+}
+
 output "azfunc_url" {
-  description = "A URL de acesso padrão para o Azure Function App."
-  value       = "https://${azurerm_function_app_flex_consumption.azfunc.default_hostname}"
+  value = "https://${azurerm_function_app_flex_consumption.azfunc.default_hostname}"
 }
