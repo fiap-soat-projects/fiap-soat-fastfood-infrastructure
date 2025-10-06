@@ -42,7 +42,6 @@ jobs:
         run: terraform plan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
 
   terraform_infrastructure:
@@ -70,7 +69,6 @@ jobs:
       - name: Create tfvars file
         run: |
           cat > terraform.tfvars <<'EOF'
-          ${{ secrets.TFVARS_INFRASTRUCTURE_CONTENT }}
           EOF
 
       - name: Terraform Init
@@ -80,7 +78,6 @@ jobs:
         run: terraform plan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
 
   terraform_resources:
@@ -105,16 +102,17 @@ jobs:
           echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}" >> $GITHUB_ENV
           echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-          
-      - name: Install Azure CLI
-        run: |
-          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-      - name: Install kubelogin
-        if: github.ref == 'refs/heads/main'
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Install kubectl and kubelogin
         run: |
-          sudo apt-get update
-          sudo apt-get install -y kubelogin
+          az aks install-cli
+          kubelogin --version
+
 
       - name: Create tfvars file
         run: |
@@ -129,7 +127,6 @@ jobs:
         run: terraform plan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
 
   terraform_api_management:
@@ -155,15 +152,15 @@ jobs:
           echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
 
-      - name: Install Azure CLI
-        run: |
-          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Install kubelogin
-        if: github.ref == 'refs/heads/main'
+      - name: Install kubectl and kubelogin
         run: |
-          sudo apt-get update
-          sudo apt-get install -y kubelogin
+          az aks install-cli
+          kubelogin --version
 
       - name: Create tfvars file
         run: |
@@ -178,5 +175,4 @@ jobs:
         run: terraform plan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
