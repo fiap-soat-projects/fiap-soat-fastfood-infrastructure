@@ -75,56 +75,35 @@ resource "azurerm_api_management_named_value" "azfunc_key_nv" {
   tags                = ["function", "key"]
 }
 
-resource "azurerm_api_management_api" "fastfood_backend" {
-  name                  = local.apim_fastfood_backend_name
-  display_name          = local.apim_fastfood_backend_name
-  resource_group_name   = azurerm_resource_group.apim_rg.name
-  api_management_name   = azurerm_api_management.apim.name
-  service_url           = "http://${local.fastfood_service_ip}:80"
-  revision              = "1"
-  path                  = "fastfood"
-  protocols             = ["https"]
-  api_type              = "http"
-  subscription_required = false
+module "api_management_backend_fastfood_order" {
+  source = "../../modules/api_management_backend"
+
+  apim_name          = local.apim_name
+  apim_rg_name       = local.apim_rg_name
+  backend_name       = "fastfood-order-backend"
+  backend_path       = "fastfood-order"
+  backend_service_ip = local.fastfood_order_service_ip
+  function_app_url   = data.terraform_remote_state.function.outputs.url
 }
 
-resource "azurerm_api_management_api_operation" "fastfood_api_operations" {
-  for_each = local.fastfood_api_operations
+module "api_management_backend_fastfood_payment" {
+  source = "../../modules/api_management_backend"
 
-  operation_id        = "wildcard-${each.key}"
-  api_name            = azurerm_api_management_api.fastfood_backend.name
-  api_management_name = azurerm_api_management.apim.name
-  resource_group_name = azurerm_resource_group.apim_rg.name
-  display_name        = each.value.display_name
-  method              = each.value.method
-  url_template        = "/*"
+  apim_name          = local.apim_name
+  apim_rg_name       = local.apim_rg_name
+  backend_name       = "fastfood-payment-backend"
+  backend_path       = "fastfood-payment"
+  backend_service_ip = local.fastfood_payment_service_ip
+  function_app_url   = data.terraform_remote_state.function.outputs.url
 }
 
-resource "azurerm_api_management_api_policy" "fastfood_backend_wide_policy" {
-  api_name            = azurerm_api_management_api.fastfood_backend.name
-  api_management_name = azurerm_api_management.apim.name
-  resource_group_name = azurerm_resource_group.apim_rg.name
+module "api_management_backend_fastfood_customer" {
+  source = "../../modules/api_management_backend"
 
-  xml_content = <<XML
-    <policies>
-      <inbound>
-        <base />
-        <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Invalid or expired token.">          
-          <openid-config url="${data.terraform_remote_state.function.outputs.url}/api/.well-known/openid-configuration" />          
-          <audiences>
-            <audience>api://fastfood-api</audience>
-          </audiences>          
-          </validate-jwt>        
-      </inbound> 
-      <backend>
-          <base />
-      </backend>
-      <outbound>
-          <base />
-      </outbound>
-      <on-error>
-          <base />
-      </on-error>
-    </policies>
-  XML
+  apim_name          = local.apim_name
+  apim_rg_name       = local.apim_rg_name
+  backend_name       = "fastfood-customer-backend"
+  backend_path       = "fastfood-customer"
+  backend_service_ip = local.fastfood_customer_service_ip
+  function_app_url   = data.terraform_remote_state.function.outputs.url
 }
