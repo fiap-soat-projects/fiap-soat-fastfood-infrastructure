@@ -23,7 +23,7 @@ variable "backend_service_ip" {
   type        = string
 }
 
-variable "function_app_url" {
-  description = "The URL of the authentication function app."
+variable "apim_gateway_url" {
+  description = "The gateway URL of the API Management instance."
   type        = string
 }

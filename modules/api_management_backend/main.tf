@@ -33,7 +33,7 @@ resource "azurerm_api_management_api_policy" "fastfood_backend_wide_policy" {
       <inbound>
         <base />
         <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Invalid or expired token.">          
-          <openid-config url="${var.function_app_url}/api/.well-known/openid-configuration" />          
+          <openid-config url="${var.apim_gateway_url}/.well-known/openid-configuration" />
           <audiences>
             <audience>api://fastfood-api</audience>
           </audiences>          
