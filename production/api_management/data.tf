@@ -18,9 +18,23 @@ data "terraform_remote_state" "function" {
   }
 }
 
-data "kubernetes_service" "fastfood_service" {
+data "kubernetes_service" "fastfood_order_service" {
   metadata {
-    name      = "fastfood-api"
+    name      = "fastfood-order-api"
+    namespace = "fiap"
+  }
+}
+
+data "kubernetes_service" "fastfood_payment_service" {
+  metadata {
+    name      = "fastfood-payment-api"
+    namespace = "fiap"
+  }
+}
+
+data "kubernetes_service" "fastfood_customer_service" {
+  metadata {
+    name      = "fastfood-customer-api"
     namespace = "fiap"
   }
 }
