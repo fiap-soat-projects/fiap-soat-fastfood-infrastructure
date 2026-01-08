@@ -15,5 +15,5 @@ output "azfunc_rg" {
 }
 
 output "azfunc_url" {
-  value = "https://${azurerm_function_app_flex_consumption.azfunc.default_hostname}"
+  value = "https://${azurerm_function_app_flex_consumption.azfunc.default_hostname}/api"
 }

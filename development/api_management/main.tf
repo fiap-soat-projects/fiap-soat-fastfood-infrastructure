@@ -83,7 +83,7 @@ module "api_management_backend_fastfood_order" {
   backend_name       = "fastfood-order-backend"
   backend_path       = "fastfood-order"
   backend_service_ip = local.fastfood_order_service_ip
-  function_app_url   = data.terraform_remote_state.function.outputs.url
+  apim_gateway_url   = azurerm_api_management.apim.gateway_url
 }
 
 module "api_management_backend_fastfood_payment" {
@@ -94,7 +94,7 @@ module "api_management_backend_fastfood_payment" {
   backend_name       = "fastfood-payment-backend"
   backend_path       = "fastfood-payment"
   backend_service_ip = local.fastfood_payment_service_ip
-  function_app_url   = data.terraform_remote_state.function.outputs.url
+  apim_gateway_url   = azurerm_api_management.apim.gateway_url
 }
 
 module "api_management_backend_fastfood_customer" {
@@ -105,5 +105,5 @@ module "api_management_backend_fastfood_customer" {
   backend_name       = "fastfood-customer-backend"
   backend_path       = "fastfood-customer"
   backend_service_ip = local.fastfood_customer_service_ip
-  function_app_url   = data.terraform_remote_state.function.outputs.url
+  apim_gateway_url   = azurerm_api_management.apim.gateway_url
 }
